@@ -1,6 +1,8 @@
 pinterestlike
 =============
 
+Fork from: https://github.com/t0lkman/pinterestlike
+
 Pinterest like layout
 
 Live demo:
