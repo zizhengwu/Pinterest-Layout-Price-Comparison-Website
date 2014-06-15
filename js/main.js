@@ -73,23 +73,22 @@
 		var box_html = [];
 		wrapper.addClass('ajaxloader');
 		// fetch news content
-		url = 'http://localhost/cgi-bin/taobao.py?keyword=' + keyword;
+		url = 'http://localhost/cgi-bin/amazon.py?keyword=' + keyword;
 		imagesXhr = $.getJSON(url,
-			function (response) { // we get ~30 images, let's select randomly one for illustration
+			function (response) {
 				for (var count = response[0].length - 1; count >= 0; count--) {
 					box_html = news_item_template({
 					link : response[1][count],
 					title : response[0][count],
-					image : "http://www.baidu.com/img/baidu_sylogo1.gif",
-					details : response[2][count]
+					image : response[3][count],
+					details : '亚马逊： ' + response[2][count]
 				});
 				wrapper.append(box_html);
 			};
 		}).fail(function () {
 			console.log("error fetching news illustration");
 		}).done(function () {
-			console.log(imagesXhr);
-		   $.when.apply($, imagesXhr).then(function () {
+			$.when.apply($, imagesXhr).then(function () {
 				wrapper.removeClass('ajaxloader');
 				boxes = $('.smart_box');
 				boxes.each(function () {
@@ -101,51 +100,33 @@
 				setup();
 		    });
 		});
-
-
-		// $.getJSON(bing_news, 
-		// 	{
-		// 		keyword : keyword,
-		// 		data_type : 'news'
-		// 	},
-		// 	function (response) {
-		// 		_.each(response.d.results, function (news_item) {
-		// 				// fetch news illustrations
-		// 				imagesXhr[i++] = $.getJSON(bing_news, 
-		// 								{
-		// 									keyword : news_item.Title,
-		// 									data_type : 'images'
-		// 								}, 
-		// 								function (response) { // we get ~30 images, let's select randomly one for illustration
-		// 									var index = _.random(0, response.d.results.length);
-		// 									if(response.d.results[index]){
-		// 										box_html = news_item_template({
-		// 											link : news_item.Url,
-		// 											title : news_item.Title,
-		// 											image : response.d.results[index].MediaUrl,
-		// 											details : news_item.Description
-		// 										});
-		// 										wrapper.append(box_html);
-		// 									}
-		// 								});
-		// 		});
-		// }).fail(function () {
-		// 	console.log("error fetching news illustration");
-		// }).done(function () {
-		//    $.when.apply($, imagesXhr).then(function () {
-		// 		wrapper.removeClass('ajaxloader');
-		// 		boxes = $('.smart_box');
-		// 		boxes.each(function (i) {
-		// 			$(this).click(function (e) {
-		// 				window.location.href = $(this).data('href');
-		// 			});
-		// 		});
-		// 		boxes.css('visibility', 'visible');
-		// 		setup();
-		//     });
-		// });
-
-
+		url = 'http://localhost/cgi-bin/taobao.py?keyword=' + keyword;
+		imagesXhr = $.getJSON(url,
+					function (response) {
+						for (var count = response[0].length - 1; count >= 0; count--) {
+							box_html = news_item_template({
+							link : response[1][count],
+							title : response[0][count],
+							image : response[3][count],
+							details : '淘宝： ' + response[2][count]
+						});
+						wrapper.append(box_html);
+					};
+				}).fail(function () {
+					console.log("error fetching news illustration");
+				}).done(function () {
+					$.when.apply($, imagesXhr).then(function () {
+						wrapper.removeClass('ajaxloader');
+						boxes = $('.smart_box');
+						boxes.each(function () {
+							$(this).click(function (e) {
+								window.location.href = $(this).data('href');
+							});
+						});
+						boxes.css('visibility', 'visible');
+						setup();
+				    });
+				});
 	}
 
 	var setup = function () {
