@@ -73,7 +73,7 @@
 		var box_html = [];
 		wrapper.addClass('ajaxloader');
 		// fetch news content
-		url = 'http://localhost/cgi-bin/amazon.py?keyword=' + keyword;
+		url = 'http://10.0.1.7/cgi-bin/amazon.py?keyword=' + keyword;
 		imagesXhr = $.getJSON(url,
 			function (response) {
 				for (var count = response[0].length - 1; count >= 0; count--) {
@@ -100,7 +100,7 @@
 				setup();
 		    });
 		});
-		url = 'http://localhost/cgi-bin/taobao.py?keyword=' + keyword;
+		url = 'http://10.0.1.7/cgi-bin/taobao.py?keyword=' + keyword;
 		imagesXhr = $.getJSON(url,
 					function (response) {
 						for (var count = response[0].length - 1; count >= 0; count--) {
@@ -127,6 +127,35 @@
 						setup();
 				    });
 				});
+		url = 'http://10.0.1.7/cgi-bin/jd.py?keyword=' + keyword;
+		imagesXhr = $.getJSON(url,
+					function (response) {
+						for (var count = response[0].length - 1; count >= 0; count--) {
+							box_html = news_item_template({
+							link : response[1][count],
+							title : response[0][count],
+							image : response[3][count],
+							details : '京东： ' + response[2][count]
+						});
+						wrapper.append(box_html);
+					};
+				}).fail(function () {
+					console.log("error fetching news illustration");
+				}).done(function () {
+					$.when.apply($, imagesXhr).then(function () {
+						wrapper.removeClass('ajaxloader');
+						boxes = $('.smart_box');
+						boxes.each(function () {
+							$(this).click(function (e) {
+								window.location.href = $(this).data('href');
+							});
+						});
+						boxes.css('visibility', 'visible');
+						setup();
+				    });
+				});
+
+
 	}
 
 	var setup = function () {
